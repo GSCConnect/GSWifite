@@ -7,13 +7,13 @@ from .util.color import Color
 from .tools.macchanger import Macchanger
 
 class Configuration(object):
-    ''' Stores configuration variables and functions for Wifite. '''
-    version = '2.2.5'
+    ''' Stores configuration variables and functions for GSWifite. '''
+    version = '1.0'
 
     initialized = False # Flag indicating config has been initialized
-    temp_dir = None     # Temporary directory
+    temp_dir = /tmp/gswifite     # Temporary directory
     interface = None
-    verbose = 0
+    verbose = 3
 
     @classmethod
     def initialize(cls, load_interface=True):
@@ -29,12 +29,12 @@ class Configuration(object):
             return
         cls.initialized = True
 
-        cls.verbose = 0 # Verbosity of output. Higher number means more debug info about running processes.
+        cls.verbose = 3 # Verbosity of output. Higher number means more debug info about running processes.
         cls.print_stack_traces = True
 
-        cls.kill_conflicting_processes = False
+        cls.kill_conflicting_processes = True
 
-        cls.scan_time = 0 # Time to wait before attacking all targets
+        cls.scan_time = 45 # Time to wait before attacking all targets
 
         cls.tx_power = 0 # Wifi transmit power (0 is default)
         cls.interface = None
@@ -43,16 +43,16 @@ class Configuration(object):
         cls.target_bssid = None # User-defined AP BSSID
         cls.ignore_essid = None # ESSIDs to ignore
         cls.clients_only = False # Only show targets that have associated clients
-        cls.five_ghz = False # Scan 5Ghz channels
-        cls.show_bssids = False # Show BSSIDs in targets list
-        cls.random_mac = False # Should generate a random Mac address at startup.
+        cls.five_ghz = True # Scan 5Ghz channels
+        cls.show_bssids = True # Show BSSIDs in targets list
+        cls.random_mac = True # Should generate a random Mac address at startup.
         cls.no_deauth = False # Deauth hidden networks & WPA handshake targets
-        cls.num_deauths = 1 # Number of deauth packets to send to each target.
+        cls.num_deauths = 2 # Number of deauth packets to send to each target.
 
         cls.encryption_filter = ['WEP', 'WPA', 'WPS']
 
         # EvilTwin variables
-        cls.use_eviltwin = False
+        cls.use_eviltwin = True
         cls.eviltwin_port = 80
         cls.eviltwin_deauth_iface = None
         cls.eviltwin_fakeap_iface = None
@@ -63,28 +63,28 @@ class Configuration(object):
         cls.wep_timeout = 600 # Seconds to wait before failing
         cls.wep_crack_at_ivs = 10000 # Minimum IVs to start cracking
         cls.require_fakeauth = False
-        cls.wep_restart_stale_ivs = 11 # Seconds to wait before restarting
+        cls.wep_restart_stale_ivs = 30 # Seconds to wait before restarting
                                                  # Aireplay if IVs don't increaes.
                                                  # '0' means never restart.
         cls.wep_restart_aircrack = 30  # Seconds to give aircrack to crack
                                                  # before restarting the process.
         cls.wep_crack_at_ivs = 10000   # Number of IVS to start cracking
-        cls.wep_keep_ivs = False       # Retain .ivs files across multiple attacks.
+        cls.wep_keep_ivs = True       # Retain .ivs files across multiple attacks.
 
         # WPA variables
         cls.wpa_filter = False # Only attack WPA networks
-        cls.wpa_deauth_timeout = 15 # Wait time between deauths
+        cls.wpa_deauth_timeout = 30 # Wait time between deauths
         cls.wpa_attack_timeout = 500 # Wait time before failing
-        cls.wpa_handshake_dir = 'hs' # Dir to store handshakes
+        cls.wpa_handshake_dir = 'Captured_HS' # Dir to store handshakes
         cls.wpa_strip_handshake = False # Strip non-handshake packets
         cls.ignore_old_handshakes = False # Always fetch a new handshake
 
         # PMKID variables
         cls.use_pmkid_only = False  # Only use PMKID Capture+Crack attack
-        cls.pmkid_timeout = 30  # Time to wait for PMKID capture
+        cls.pmkid_timeout = 300  # Time to wait for PMKID capture
 
         # Default dictionary for cracking
-        cls.cracked_file = 'cracked.txt'
+        cls.cracked_file = 'GSWifite_cracked.txt'
         cls.wordlist = None
         wordlists = [
             './wordlist-top4800-probable.txt',  # Local file (ran from cloned repo)
@@ -108,14 +108,14 @@ class Configuration(object):
         cls.wps_pixie   = True
         cls.wps_pin     = True
         cls.wps_ignore_lock = False  # Skip WPS PIN attack if AP is locked.
-        cls.wps_pixie_timeout = 300      # Seconds to wait for PIN before WPS Pixie attack fails
-        cls.wps_fail_threshold = 100     # Max number of failures
-        cls.wps_timeout_threshold = 100  # Max number of timeouts
+        cls.wps_pixie_timeout = 500      # Seconds to wait for PIN before WPS Pixie attack fails
+        cls.wps_fail_threshold = 50     # Max number of failures
+        cls.wps_timeout_threshold = 50  # Max number of timeouts
 
         # Commands
-        cls.show_cracked = False
+        cls.show_cracked = True
         cls.check_handshake = None
-        cls.crack_handshake = False
+        cls.crack_handshake = True
 
         # Overwrite config values with arguments (if defined)
         cls.load_from_arguments()
@@ -452,7 +452,7 @@ class Configuration(object):
     def create_temp():
         ''' Creates and returns a temporary directory '''
         from tempfile import mkdtemp
-        tmp = mkdtemp(prefix='wifite')
+        tmp = mkdtemp(prefix='GSWifite')
         if not tmp.endswith(os.sep):
             tmp += os.sep
         return tmp
@@ -484,7 +484,7 @@ class Configuration(object):
             #Airmon.put_interface_up(Airmon.base_interface)
 
         if Airmon.killed_network_manager:
-            Color.pl('{!} You can restart NetworkManager when finished ({C}service network-manager start{W})')
+            Color.pl('{!} You can restart NetworkManager when finished ({C}sudo service network-manager start{W})')
             #Airmon.start_network_manager()
 
         exit(code)
