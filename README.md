@@ -1,34 +1,54 @@
-Wifite
+GSWifite
 ======
 
-This repo is a complete re-write of [`wifite`](https://github.com/derv82/wifite), a Python script for auditing wireless networks.
+This repo is a complete re-write of [`wifite2`](https://github.com/derv82/wifite2), a Python script for auditing wireless networks.
 
-Wifite runs existing wireless-auditing tools for you. Stop memorizing command arguments & switches!
+GSWifite is an updated version of Wifite2, since it hasn't been updated since 2018... Some of the processes were improved and a few other
+bug fixes. This software serves the purpose of auditing YOUR OWN NETWORKS to see if they are secure against attackers. DO NOT use this on 
+networks that you don't have permission to audit. 
 
-Wifite is designed to use all known methods for retrieving the password of a wireless access point (router).  These methods include:
+GSWifite is designed to use all known methods for retrieving the password of a wireless access point (router).  
+
+These methods include:
+
 1. WPS: The [Offline Pixie-Dust attack](https://en.wikipedia.org/wiki/Wi-Fi_Protected_Setup#Offline_brute-force_attack)
 1. WPS: The [Online Brute-Force PIN attack](https://en.wikipedia.org/wiki/Wi-Fi_Protected_Setup#Online_brute-force_attack)
 2. WPA: The [WPA Handshake Capture](https://hashcat.net/forum/thread-7717.html) + offline crack.
 3. WPA: The [PMKID Hash Capture](https://hashcat.net/forum/thread-7717.html) + offline crack.
 4. WEP: Various known attacks against WEP, including *fragmentation*, *chop-chop*, *aireplay*, etc.
 
-Run wifite, select your targets, and Wifite will automatically start trying to capture or crack the password.
+## GSWifite Workflow
+
+1- Run gswifite. <br>
+2- Choose Wireless Card to use. <br>
+3- Scan the area for networks. <br>
+4- Select your targets. <br>
+5- Run the attack. <br>
 
 Supported Operating Systems
 ---------------------------
-Wifite is designed specifically for the latest version of [**Kali** Linux](https://www.kali.org/). [ParrotSec](https://www.parrotsec.org/) is also supported.
+GSWifite runs under almost any linux distro, however I have only tested this on debian based distros like:
 
-Other pen-testing distributions (such as BackBox or Ubuntu) have outdated versions of the tools used by Wifite. Do not expect support unless you are using the latest versions of the *Required Tools*, and also [patched wireless drivers that support injection]().
+- Linux MX
+- Raspian OS
+- Ubuntu
+- Zorin OS
+- Kali
+- Parrot OS
 
-Required Tools
+To make this as easy as possible to use, I have prepared a script that will install all dependencies on debian based distros.
+Script required little to no input from the user.**God Bless Bash.**
+
+Requirements
 --------------
 First and foremost, you will need a wireless card capable of "Monitor Mode" and packet injection (see [this tutorial for checking if your wireless card is compatible](http://www.aircrack-ng.org/doku.php?id=compatible_cards) and also [this guide](https://en.wikipedia.org/wiki/Wi-Fi_Protected_Setup#Offline_brute-force_attack)). There are many cheap wireless cards that plug into USB available from online stores.
 
-Second, only the latest versions of these programs are supported and must be installed for Wifite to work properly:
+I recommend using any ALFA Wireless Card or TP-Link Archer C6 (RTL8812au) 
 
-**Required:**
 
-* `python`: Wifite is compatible with both `python2` and `python3`.
+**Packages Required:**
+
+* `python3`: GSWifite will not support python2, but it may still work with it.
 * [`iwconfig`](https://wiki.debian.org/iwconfig): For identifying wireless devices already in Monitor Mode.
 * [`ifconfig`](https://en.wikipedia.org/wiki/Ifconfig): For starting/stopping wireless devices.
 * [`Aircrack-ng`](http://aircrack-ng.org/) suite, includes:
@@ -53,23 +73,23 @@ Second, only the latest versions of these programs are supported and must be ins
    * [`hcxpcaptool`](https://github.com/ZerBea/hcxtools): For converting PMKID packet captures into `hashcat`'s format.
 
 
-Run Wifite
+Run GSWifite
 ----------
 ```
-git clone https://github.com/derv82/wifite2.git
-cd wifite2
-sudo ./Wifite.py
+git clone https://github.com/GSCConnect/GSWifite.git
+cd GSWifite
+sudo ./GSWifite.py
 ```
 
-Install Wifite
+Install GSWifite
 --------------
-To install onto your computer (so you can just run `wifite` from any terminal), run:
+To install onto your computer (so you can just run `GSwifite` from any terminal), run:
 
 ```bash
 sudo python setup.py install
 ```
 
-This will install `wifite` to `/usr/sbin/wifite` which should be in your terminal path.
+This will install `GSWifite` to `/usr/sbin/wifite` which should be in your terminal path.
 
 **Note:** Uninstalling is [not as easy](https://stackoverflow.com/questions/1550226/python-setup-py-uninstall#1550235). The only way to uninstall is to record the files installed by the above command and *remove* those files:
 
@@ -98,27 +118,9 @@ Brief Feature List
 
 What's new?
 -----------
-Comparing this repo to the "old wifite" @ https://github.com/derv82/wifite
+Comparing this repo to the "old wifite" @ https://github.com/derv82/wifite2
 
-* **Less bugs**
-   * Cleaner process management. Does not leave processes running in the background (the old `wifite` was bad about this).
-   * No longer "one monolithic script". Has working unit tests. Pull requests are less-painful!
-* **Speed**
-   * Target access points are refreshed every second instead of every 5 seconds.
-* **Accuracy**
-   * Displays realtime Power level of currently-attacked target.
-   * Displays more information during an attack (e.g. % during WEP chopchop attacks, Pixie-Dust step index, etc)
-* **Educational**
-   * The `--verbose` option (expandable to `-vv` or `-vvv`) shows which commands are executed & the output of those commands.
-   * This can help debug why Wifite is not working for you. Or so you can learn how these tools are used.
-* More-actively developed.
-* Python 3 support.
-* Sweet new ASCII banner.
-
-What's gone?
-------------
-* Some command-line arguments (`--wept`, `--wpst`, and other confusing switches).
-   * You can still access some of these obscure options, try `wifite -h -v`
+TO BE UPDATED SOON. :)
 
 What's not new?
 ---------------
